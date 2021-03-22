@@ -10,7 +10,7 @@ See [DATASET.md](DATASET.md) for more dataset information
 ## Query Set
 
 The installed queris at TGCloud can be found at [query](query) directory
-The following line codes is an example for calling one of the query using [pytigergraph](https://pypi.org/project/pyTigerGraph/).
+The following line codes is an example for calling one of the queries using [pytigergraph](https://pypi.org/project/pyTigerGraph/).
 
 ```python
 params = {"foodname":"indomie"} #query's arguments
