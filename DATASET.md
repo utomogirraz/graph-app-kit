@@ -14,3 +14,5 @@
 # Data Mapping
 
 ![Schema database](dataset/map.png)
+
+all the CSV files can be found  [dataset](dataset) directory
