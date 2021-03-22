@@ -5,7 +5,7 @@
 Linked Open Data system for halal products (LODHalal) proposed a halal food vocabulary that is enhanced from two food existing vocabularies. Furthermore, it provides two interfaces: a web application and an Android application that are able to search a food product and predict a halal status of an uncertified-halal product.
 
 ## Dataset
-See [dataset.md](dataset.md) for more dataset information
+See [DATASET.md](DATASET.md) for more dataset information
 
 
 ## Teams
