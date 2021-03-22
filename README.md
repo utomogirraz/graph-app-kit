@@ -19,7 +19,7 @@ preInstalledResult = conn.runInstalledQuery(queryName, params)
 print(preInstalledResult)
 ```
 
-## Setting Connection with TGCloud and Graphistry
+## Setting Connection to TGCloud and Graphistry
 
 Connection with TGCloud can be established by entering the TGCloud host info on `/src/python/envs/tigergraph.env` while connection with Graphistry can be established by entering Graphistry account information on `/src/python/envs/graphistry.env`.
 
