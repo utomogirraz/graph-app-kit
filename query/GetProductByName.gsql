@@ -1,0 +1,12 @@
+CREATE QUERY GetProductByName(string foodname) FOR GRAPH halal API("v2") SYNTAX v2 {
+
+TYPEDEF TUPLE <STRING id, STRING foodname, STRING cert, STRING org> TUPLE_RECORD;
+ListAccum<TUPLE_RECORD> @@tupleRecords;
+string x ;
+x = "%"+foodname+"%";
+ALL = {food.*};
+OTHER = SELECT s FROM ALL:s-(halal_status)-certificate:c WHERE lower(s.food_name) LIKE x
+        ACCUM @@tupleRecords += TUPLE_RECORD (s.id, s.food_name, c.number, c.organization);
+PRINT @@tupleRecords;
+
+}

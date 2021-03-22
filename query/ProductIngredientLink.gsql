@@ -1,0 +1,10 @@
+CREATE QUERY ProductIngredientLink(/* Parameters here */) FOR GRAPH halal { 
+  /* Write query logic here */ 
+    TYPEDEF TUPLE <STRING src, STRING dest> TUPLE_RECORD;
+    ListAccum<TUPLE_RECORD> @@tupleRecords;
+    F = {food.*};  
+    result = SELECT tgt FROM F:s-(contains:e)-ingredient:tgt  
+             ACCUM @@tupleRecords += TUPLE_RECORD (s.food_name, tgt.name);
+    PRINT @@tupleRecords;
+
+}

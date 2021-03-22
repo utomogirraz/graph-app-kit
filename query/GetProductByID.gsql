@@ -1,0 +1,8 @@
+CREATE QUERY GetProductByID(VERTEX<food> f) FOR GRAPH halal API("v2") SYNTAX v2 {
+TYPEDEF TUPLE <STRING foodname, STRING ing> TUPLE_RECORD;
+ListAccum<TUPLE_RECORD> @@tupleRecords;
+ALL = {f};
+OTHER = SELECT i FROM ALL:s-(contains:e)-ingredient:i
+        ACCUM @@tupleRecords += TUPLE_RECORD (s.food_name, i.name);
+PRINT @@tupleRecords;
+}

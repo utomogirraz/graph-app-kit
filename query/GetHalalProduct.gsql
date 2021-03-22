@@ -1,0 +1,8 @@
+CREATE QUERY GetHalalProduct() FOR GRAPH halal { 
+ 
+  Seed = {food.*};
+  Product = SELECT name FROM Seed:name-(halal_status)-certificate:id
+  limit 100 ;           
+  PRINT Product;
+
+}

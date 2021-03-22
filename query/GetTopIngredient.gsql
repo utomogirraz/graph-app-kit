@@ -1,0 +1,12 @@
+CREATE QUERY GetTopIngredient(int num) FOR GRAPH halal { 
+
+  SumAccum<INT> @productNum;
+ 
+  Seed={ingredient.*};
+  Ing = SELECT a FROM Seed:a-()-:t             
+  ACCUM a.@productNum +=1             
+  ORDER BY a.@productNum DESC             
+  LIMIT num;  
+ 
+PRINT Ing;
+}
