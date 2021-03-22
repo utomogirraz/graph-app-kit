@@ -1,0 +1,15 @@
+CREATE QUERY GetTopHalalManufactures(int num) FOR GRAPH halal { 
+
+  SumAccum<INT> @productNum;
+ 
+  Seed = {food.*};
+  
+  Ents = SELECT f  FROM Seed:f-(halal_status)-certificate:c;       
+         
+  Man = SELECT m FROM Ents:e -(has_manufacturer)-manufacture:m       
+  ACCUM m.@productNum += 1           
+  ORDER BY m.@productNum DESC           
+  LIMIT num;
+  
+  PRINT Man;
+}

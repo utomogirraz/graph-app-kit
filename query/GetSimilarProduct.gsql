@@ -1,0 +1,21 @@
+CREATE QUERY GetSimilarProduct( STRING ids, INT top) FOR GRAPH halal { 
+  /* Write query logic here */ 
+SumAccum<INT> @intersection_size, @@set_sizeA, @set_sizeB;
+SumAccum<FLOAT> @similarity;
+VERTEX check;
+Seed = {food.*};
+Start = SELECT p  FROM Seed:p            
+        WHERE p.id == ids 
+        ACCUM check = p,    
+        @@set_sizeA+=p.outdegree("contains");
+Subjects = SELECT s FROM Seed:s-(contains)-:t          
+        WHERE s!= check            
+        ACCUM s.@intersection_size +=1,                  
+        s.@set_sizeB = s.outdegree("contains")                            
+ 
+POST-ACCUM s.@similarity = s.@intersection_size  *1.0/(@@set_sizeA+s.@set_sizeB- 
+                       s.@intersection_size)            
+ORDER BY s.@similarity DESC            LIMIT top;
+
+PRINT Subjects[Subjects.food_name,Subjects.@similarity] AS SIMILAR_Product;
+}

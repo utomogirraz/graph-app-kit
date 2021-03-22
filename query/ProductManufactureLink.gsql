@@ -1,0 +1,10 @@
+CREATE QUERY ProductManufactureLink(/* Parameters here */) FOR GRAPH halal { 
+  /* Write query logic here */ 
+    TYPEDEF TUPLE <STRING src, STRING dest> TUPLE_RECORD;
+    ListAccum<TUPLE_RECORD> @@tupleRecords;
+    F = {food.*};  
+    result = SELECT tgt FROM F:s-(has_manufacturer:e)->manufacture:tgt  
+             ACCUM @@tupleRecords += TUPLE_RECORD (s.food_name, tgt.manufacture_name);
+    PRINT @@tupleRecords;
+
+}
