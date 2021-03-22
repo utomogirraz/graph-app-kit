@@ -7,6 +7,15 @@ Linked Open Data system for halal products (LODHalal) proposed a halal food voca
 ## Dataset
 See [DATASET.md](DATASET.md) for more dataset information
 
+## Query Set
+
+The installed queris at TGCloud can be found at [query](query) directory
+The following line codes is an example for calling one of the query using pytigergraph.
+
+`params = {"foodname":"indomie"} #query's arguments
+queryName = "GetProductByName"
+preInstalledResult = conn.runInstalledQuery(queryName, params) 
+print(preInstalledResult)`
 
 ## Teams
 
