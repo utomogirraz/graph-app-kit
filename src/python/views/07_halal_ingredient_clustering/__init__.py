@@ -1,11 +1,11 @@
-import pandas as pd, asyncio, streamlit as st, graphistry, time
+import pandas as pd, asyncio, streamlit as st, graphistry, time, os
 from components import GraphistrySt, URLParam
 from css import all_css
 from TigerGraph_helper import tg_helper
 from util import getChild
 
 
-app_id = 'app_06'
+app_id = 'app_07'
 logger = getChild(app_id)
 urlParams = URLParam(app_id)
 
@@ -17,8 +17,8 @@ metrics = {'tigergraph_time': 0, 'graphistry_time': 0,
 def info():
     return {
         'id': app_id,
-        'name': 'Halal - Product & Ingredient Link',
-        'tags': ['halal_food', 'tigergraph_halal_food', 'product_ingredient_link']
+        'name': 'Halal - Ingredient Cluster',
+        'tags': ['halal_food', 'tigergraph_halal_food', 'ingredient_cluster']
     }
 
 def run():
@@ -34,8 +34,12 @@ def custom_css():
     
 def sidebar_area():
     
+    st.sidebar.subheader('Select the Number of Cluster')
+    clusnumlist = [2, 4]
+    clusnum = st.sidebar.selectbox('Number of Cluster', clusnumlist)
+    
     conn = tg_helper.connect_to_tigergraph()
-    return {'conn': conn}
+    return {'clusnum': clusnum, 'conn': conn}
 
 
 def plot_url(nodes_df, edges_df):
@@ -49,14 +53,16 @@ def plot_url(nodes_df, edges_df):
     g = graphistry \
         .edges(edges_df) \
         .settings(url_params={'play': 7000, 'dissuadeHubs': True}) \
-        .bind(edge_weight=1)      \
-        .bind(source='src', destination='dest') \
+        .bind(edge_weight=0)      \
+        .bind(source='Ingredient', destination='Cluster') \
         .bind(edge_title='', edge_label='') \
         .nodes(nodes_df) \
-        .bind(node='Name') \
-        .encode_point_icon('Type', categorical_mapping={'Product': 'cutlery',
-                                                        'Ingredient': 'apple'},
-                                    default_mapping='question')
+        .bind(node='Ingredient') \
+        .encode_point_color("Cluster", categorical_mapping={"Cluster 1": 'blue',
+                                                            "Cluster 2": 'red',
+                                                            "Cluster 3": 'green',
+                                                            "Cluster 4": 'orange'},
+                                    default_mapping='white') \
 
     # .encode_point_size('', ["blue", "yellow", "red"],  ,as_continuous=True)
     # if not (node_label_col is None):
@@ -76,7 +82,7 @@ def plot_url(nodes_df, edges_df):
 
 
 
-def main_area(conn):
+def main_area(clusnum, conn):
     
     st.write(""" # Tigergraph Halal Food """)
     st.write('### Halal Product & Ingredient Link')
@@ -87,29 +93,30 @@ def main_area(conn):
         st.write(RuntimeError('Demo requires a TigerGraph connection. Put creds into left sidebar, or fill in envs/tigergraph.env & restart'))
         return None
     
-    query = "ProductIngredientLink"
-    resultTG = conn.runInstalledQuery(query)
-    results = resultTG[0]['@@tupleRecords']
+    file_path = os.path.dirname(os.path.realpath(__file__))
+    if (clusnum == 2):
+        data = pd.read_csv(os.path.join(file_path, 'klasters3.csv'))
+    else:
+        data = pd.read_csv(os.path.join(file_path, 'klasters.csv'))
     
-    data = pd.DataFrame(results)
     nan_value = float("NaN")
     data.replace("", nan_value, inplace=True)
-    data.dropna(subset = ["src"], inplace=True)
-    edges_df = data
+    data.dropna(subset = ['0'], inplace=True)
     
-    nodes_src = pd.DataFrame({
-            'Name': data['src'],
-            'Type': 'Product'
-            }) 
+    cluster_num = []
+    for vertex in data['1']:
+        if int(vertex)<1:
+            cluster_num.append('Cluster {}'.format(int(vertex)+1))
+        else:
+            cluster_num.append('Cluster {}'.format(int(vertex)))
     
-    nodes_dest = pd.DataFrame({
-            'Name': data['dest'],
-            'Type': 'Ingredient'
-            }) 
-    
-    nodes_df = nodes_src.append(nodes_dest)
-    nodes_df = nodes_df.drop_duplicates(subset='Name')
+    nodes_df = pd.DataFrame({
+            'Ingredient': data['0'],
+            'Cluster': cluster_num
+            })  
             
+    edges_df = nodes_df
+    
     try:
         res = data.values.tolist()
         toc = time.perf_counter()
@@ -163,7 +170,7 @@ def run_all():
             return
         
         
-        main_area(sidebar_filters['conn'])
+        main_area(sidebar_filters['clusnum'], sidebar_filters['conn'])
 
     except Exception as exn:
         st.write('Error loading dashboard')
