@@ -9,7 +9,7 @@ See [DATASET.md](DATASET.md) for more dataset information
 
 ## Query Set
 
-The installed queris at TGCloud can be found at [query](query) directory
+The installed queris at TGCloud can be found at [query](query) directory.
 The following line codes is an example for calling one of the queries using [pytigergraph](https://pypi.org/project/pyTigerGraph/).
 
 ```python
@@ -18,9 +18,14 @@ queryName = "GetProductByName"
 preInstalledResult = conn.runInstalledQuery(queryName, params) 
 print(preInstalledResult)
 ```
+
+## Setting Connection to TGCloud and Graphistry
+
+Connection with TGCloud can be established by entering the TGCloud host info on `/src/python/envs/tigergraph.env` while connection with Graphistry can be established by entering Graphistry account information on `/src/python/envs/graphistry.env`.
+
 ## Visualization
 
-
+To create a new visualization, go to `/src/python/views` and create a new folder.
 
 ## Teams
 
