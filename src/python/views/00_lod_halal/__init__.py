@@ -71,10 +71,9 @@ def main_area():
     st.write('- Irfan Rifqi Susetyo')
     st.write('- Girraz Karyo Utomo')
     st.write('')
-    st.write('Data Acquisition and Information Dissemination Laboratory (Lab ADDI)')
-    st.write('Department of Information Systems')
-    st.write('Faculty of Intelligent Electrical and Informatics Technology')
-    st.write('Institut Teknologi Sepuluh Nopember (ITS) - Surabaya, Indonesia')
+    st.subheader('Affiliations')
+    st.write('- Data Acquisition and Information Dissemination Laboratory (Lab ADDI), Department of Information Systems, Faculty of Intelligent Electrical and Informatics Technology, Institut Teknologi Sepuluh Nopember (ITS), Indonesia')
+    st.write('- Halal Centre, Institut Teknologi Sepuluh Nopember (ITS), Indonesia')
     
     file_path = os.path.dirname(os.path.realpath(__file__))
     parent_path = os.path.abspath(os.path.join(file_path, os.path.pardir))
