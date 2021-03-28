@@ -3,6 +3,8 @@ from components import GraphistrySt, URLParam
 from css import all_css
 from TigerGraph_helper import tg_helper
 from util import getChild
+import os
+from PIL import Image
 
 
 app_id = 'app_05'
@@ -17,7 +19,7 @@ metrics = {'tigergraph_time': 0, 'graphistry_time': 0,
 def info():
     return {
         'id': app_id,
-        'name': 'Halal - Product & Manufacture Link',
+        'name': '5 - Product & Manufacture Link',
         'tags': ['halal_food', 'tigergraph_halal_food', 'product_manufacture_link']
     }
 
@@ -78,8 +80,15 @@ def plot_url(nodes_df, edges_df):
 
 def main_area(conn):
     
-    st.write(""" # Tigergraph Halal Food """)
-    st.write('### Halal Product & Manufacture Link')
+    file_path = os.path.dirname(os.path.realpath(__file__))
+    parent_path = os.path.abspath(os.path.join(file_path, os.path.pardir))
+    logo_its = Image.open(os.path.join(parent_path, 'logo.jpeg'))
+    st.image(logo_its, caption=None, width=250, use_column_width='True', clamp=False, channels='RGB', output_format='auto')
+    
+    st.write(""" # LODHalal: Halal Product & Manufacture Link """)
+    st.write('Shows the link between products and its manufacturers. The \'cutlery\' icon in the node is for product while \
+             the \'building\' icon is for manufacturer.')
+    
     tic = time.perf_counter()
              
     if conn is None:

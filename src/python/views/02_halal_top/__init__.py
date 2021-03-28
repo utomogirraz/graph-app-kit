@@ -4,6 +4,8 @@ from css import all_css
 from TigerGraph_helper import tg_helper
 import plotly.express as px
 from util import getChild
+import os
+from PIL import Image
 
 
 app_id = 'app_02'
@@ -14,8 +16,8 @@ urlParams = URLParam(app_id)
 def info():
     return {
         'id': app_id,
-        'name': 'Halal - Top Ingredients & Manufactures',
-        'tags': ['halal_food', 'tigergraph_halal_food', 'top_ingredients', 'top_manufactures']
+        'name': '2 - Top Ingredients & Manufacturers',
+        'tags': ['halal_food', 'tigergraph_halal_food', 'top_ingredients', 'top_manufacturers']
     }
 
 def run():
@@ -35,9 +37,9 @@ def sidebar_area():
     ingnumlist = [i for i in range(1, 50)]
     ingnum = st.sidebar.selectbox('Number of Top Ingredients', ingnumlist)
     
-    st.sidebar.subheader('Select the Number of Top Halal Manufactures')
+    st.sidebar.subheader('Select the Number of Top Halal Manufacturers')
     mannumlist = [i for i in range(1, 50)]
-    mannum = st.sidebar.selectbox('Number of Top Manufactures', mannumlist)
+    mannum = st.sidebar.selectbox('Number of Top Manufacturers', mannumlist)
     
     urlParams.set_field('ingnum', ingnum)
     urlParams.set_field('mannum', mannum)
@@ -48,11 +50,14 @@ def sidebar_area():
 
 def main_area(ingnum, mannum, conn):
     
-#    logger.debug('rendering main area, with url: %s', url)
-#    GraphistrySt().render_url(url)
+    file_path = os.path.dirname(os.path.realpath(__file__))
+    parent_path = os.path.abspath(os.path.join(file_path, os.path.pardir))
+    logo_its = Image.open(os.path.join(parent_path, 'logo.jpeg'))
+    st.image(logo_its, caption=None, width=250, use_column_width='True', clamp=False, channels='RGB', output_format='auto')
     
-    st.write(""" # Tigergraph Halal Food """)
-    st.write('### Top Ingredients & Top Manufactures')
+    st.write(""" # LODHalal: Top Ingredients & Top Manufacturers """)
+    st.write('Shows the most used ingredients in halal products and the manufacturers \
+             that produce halal product the most.')
     
     if conn is None:
         logger.error('Cannot run tg demo without creds')
@@ -91,7 +96,7 @@ def main_area(ingnum, mannum, conn):
     bartopman = px.bar(datatopman, x=datatopman['manufacture_name'], y=datatopman['@productNum'],
                  labels={'manufacture_name': 'Name of Manufacturer',
                          '@productNum': 'Amount of Halal Product'},
-                 title="Top {} Halal Manufactures".format(mannum), barmode='group')
+                 title="Top {} Halal Manufacturers".format(mannum), barmode='group')
     
     st.plotly_chart(bartopman, use_container_width=True)
 

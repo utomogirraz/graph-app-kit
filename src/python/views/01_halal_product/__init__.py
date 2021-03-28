@@ -3,6 +3,8 @@ from components import GraphistrySt, URLParam
 from css import all_css
 from TigerGraph_helper import tg_helper
 from util import getChild
+import os
+from PIL import Image
 
 
 app_id = 'app_01'
@@ -17,8 +19,7 @@ metrics = {'tigergraph_time': 0, 'graphistry_time': 0,
 def info():
     return {
         'id': app_id,
-        'name': 'Halal - Certified Food',
-        'enabled': True,
+        'name': '1 - Halal Certified Food',
         'tags': ['halal_food', 'tigergraph_halal_food', 'halal_certified']
     }
 
@@ -41,8 +42,14 @@ def sidebar_area():
 
 def main_area(conn):
     
-    st.write(""" # Tigergraph Halal Food """)
-    st.write('### Halal Certified Food')
+    file_path = os.path.dirname(os.path.realpath(__file__))
+    parent_path = os.path.abspath(os.path.join(file_path, os.path.pardir))
+    logo_its = Image.open(os.path.join(parent_path, 'logo.jpeg'))
+    st.image(logo_its, caption=None, width=250, use_column_width='True', clamp=False, channels='RGB', output_format='auto')
+    
+    
+    st.write(""" # LODHalal: Halal Certified Food """)
+    st.write('Shows all of the halal certified product in the dataset.')
     tic = time.perf_counter()
              
     if conn is None:

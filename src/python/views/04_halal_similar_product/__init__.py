@@ -3,6 +3,8 @@ from components import GraphistrySt, URLParam
 from css import all_css
 from TigerGraph_helper import tg_helper
 from util import getChild
+import os
+from PIL import Image
 
 
 app_id = 'app_04'
@@ -17,7 +19,7 @@ metrics = {'tigergraph_time': 0, 'graphistry_time': 0,
 def info():
     return {
         'id': app_id,
-        'name': 'Halal - Similar Product',
+        'name': '4 - Similar Product',
         'enabled': True,
         'tags': ['halal_food', 'tigergraph_halal_food', 'similar_product']
     }
@@ -39,7 +41,7 @@ def sidebar_area():
     toplist = [i for i in range(1, 21)]
     top = st.sidebar.selectbox('The Number of Most Similar Product', toplist)
     
-    selectlist = ['Based on Product ID', 'Based on 10 Similar Product Name']
+    selectlist = ['Based on 10 Similar Product Name', 'Based on Product ID']
     options = list(range(len(selectlist)))
     selectval = st.sidebar.selectbox('Input Selection Method', options,
                                   format_func=lambda x: selectlist[x])
@@ -47,12 +49,12 @@ def sidebar_area():
     urlParams.set_field('top', top)
     urlParams.set_field('selval', selectval)
     
-    if(selectval == 0):
+    if(selectval == 1):
         st.sidebar.subheader('Using Product ID as Input')
         selstr = st.sidebar.text_input('Product ID', '32366')
         selstr = selstr.lower()
         
-    elif(selectval == 1):
+    elif(selectval == 0):
         st.sidebar.subheader('Using Similar Name as Input')
         selstr = st.sidebar.text_input('Food Name', 'indomie')
         selstr = selstr.lower()
@@ -77,14 +79,6 @@ def plot_url(nodes_df, edges_df):
         .bind(edge_title='', edge_label='') \
         .nodes(nodes_df) \
         .bind(node='Food ID')
-        
-
-    # .encode_point_size('', ["blue", "yellow", "red"],  ,as_continuous=True)
-#    if not (node_label_col is None):
-#        g = g.bind(point_title=node_label_col)
-
-    # if not (edge_label_col is None):
-    #     g = g.bind(edge_title=edge_label_col)
 
     url = g.plot(render=False, as_files=True)
 
@@ -99,11 +93,16 @@ def plot_url(nodes_df, edges_df):
 
 def main_area(top, selval, selstr, conn):
     
-#    logger.debug('rendering main area, with url: %s', url)
-#    GraphistrySt().render_url(url)
+    file_path = os.path.dirname(os.path.realpath(__file__))
+    parent_path = os.path.abspath(os.path.join(file_path, os.path.pardir))
+    logo_its = Image.open(os.path.join(parent_path, 'logo.jpeg'))
+    st.image(logo_its, caption=None, width=250, use_column_width='True', clamp=False, channels='RGB', output_format='auto')
     
-    st.write(""" # Tigergraph Halal Food """)
-    st.write('### Similar Product')
+    st.write(""" # LODHalal: Similar Product """)
+    st.write('Search product with similar ingredients. We can enter the name of the product (Based on 10 Similar Product Name), \
+             then the system will search up to 10 products that contain the input word, and finally return the products that \
+             contain similar ingredients with them. Or we can enter the product ID (Based on Product ID) and then the system \
+             will return the products that contain similar ingredients with the input product.')
     tic = time.perf_counter()
              
     if conn is None:
@@ -117,7 +116,7 @@ def main_area(top, selval, selstr, conn):
     new_org = []
     new_to_id = []
     
-    if selval == 0:
+    if selval == 1:
         # Get Similar Product
         
         error = 0
@@ -152,7 +151,7 @@ def main_area(top, selval, selstr, conn):
                 new_to_id.append(product['v_id'])
                 i += 1
                 
-    elif selval == 1:
+    elif selval == 0:
     
         # Search Product by Name
         

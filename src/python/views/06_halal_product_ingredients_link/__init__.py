@@ -3,6 +3,8 @@ from components import GraphistrySt, URLParam
 from css import all_css
 from TigerGraph_helper import tg_helper
 from util import getChild
+import os
+from PIL import Image
 
 
 app_id = 'app_06'
@@ -17,7 +19,7 @@ metrics = {'tigergraph_time': 0, 'graphistry_time': 0,
 def info():
     return {
         'id': app_id,
-        'name': 'Halal - Product & Ingredient Link',
+        'name': '6 - Product & Ingredient Link',
         'tags': ['halal_food', 'tigergraph_halal_food', 'product_ingredient_link']
     }
 
@@ -58,13 +60,6 @@ def plot_url(nodes_df, edges_df):
                                                         'Ingredient': 'apple'},
                                     default_mapping='question')
 
-    # .encode_point_size('', ["blue", "yellow", "red"],  ,as_continuous=True)
-    # if not (node_label_col is None):
-    #     g = g.bind(point_title=node_label_col)
-
-    # if not (edge_label_col is None):
-    #     g = g.bind(edge_title=edge_label_col)
-
     url = g.plot(render=False, as_files=True)
 
     toc = time.perf_counter()
@@ -78,8 +73,15 @@ def plot_url(nodes_df, edges_df):
 
 def main_area(conn):
     
-    st.write(""" # Tigergraph Halal Food """)
-    st.write('### Halal Product & Ingredient Link')
+    file_path = os.path.dirname(os.path.realpath(__file__))
+    parent_path = os.path.abspath(os.path.join(file_path, os.path.pardir))
+    logo_its = Image.open(os.path.join(parent_path, 'logo.jpeg'))
+    st.image(logo_its, caption=None, width=250, use_column_width='True', clamp=False, channels='RGB', output_format='auto')
+    
+    st.write(""" # LODHalal: Halal Product & Ingredient Link """)
+    st.write('Shows the link between products and its ingredients. The \'cutlery\' icon in the node is for product, while \
+             the \'apple\' icon is for ingredient.')
+    
     tic = time.perf_counter()
              
     if conn is None:
