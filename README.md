@@ -18,6 +18,8 @@ queryName = "GetProductByName"
 preInstalledResult = conn.runInstalledQuery(queryName, params) 
 print(preInstalledResult)
 ```
+## Code
+Since it tooks a long for the computation time, we do computation before the visualization. Please find in the [code](code) directory.
 
 ## Setting Connection to TGCloud and Graphistry
 
